@@ -212,7 +212,7 @@ void addEdge(struct Graph* g, int src, int dest) {
 }
 
 
- // a utility function to keep track of whether a vertex has been discovered or not
+ // a utility function to create a array to keep track of whether a vertex has been discovered or not
 int* initFunction(int length) {
     int* isVisited = (int*)malloc(length*sizeof(int));
     for(int i = 0; i < length; i++) {
@@ -284,8 +284,7 @@ void iterativeBFS(struct Graph* g, int src, int* isVisited, FILE* fptr){
 }
 
 
-
-// a function to Perform BFS traversal 
+//BFS traversal 
 void BFS(struct Graph* g, int src) {
 
     char FileName[40];
@@ -320,7 +319,6 @@ void iterativeDFS(struct Graph* g, int src, int* isVisited, FILE* fptr) {
     struct Stack* s = createStack();
     push(s, src);
 
-
     while(isStackEmpty(s) == 0) {
         int v = s->front->data;
         pop(s);
@@ -343,7 +341,7 @@ void iterativeDFS(struct Graph* g, int src, int* isVisited, FILE* fptr) {
 
 
 
-// a function to DFS traversal 
+// DFS traversal 
 void DFS(struct Graph* g, int src){
    char FileName[40];
    char prefix[10] = "DFS_";
@@ -472,12 +470,13 @@ void get_VertexCover(struct Graph* g, char* fileName) {
     fclose(ptr);
 }
 
+
 //kieem tra khi khong lien thong
 //a utility function to check Vertex Cover
-int check_VertexCover(struct Graph* g, int* isVisited) {
+int check_VertexCover(struct Graph* g, int src, int* isVisited) {
     
     struct Queue* q = createQueue();
-    enQueue(q, 0);
+    enQueue(q, src);
     isVisited[0] = 1;
     while(isQueueEmpty(q) == 0) {
         int u = q->front->data;
@@ -495,6 +494,15 @@ int check_VertexCover(struct Graph* g, int* isVisited) {
         }
     }
    return 1;
+}
+
+int VertexCover_solution(struct Graph* g, int* isVisited){
+    for(int i = 0; i < g->numVertices; i++) {
+        if(isVisited[i] == 0 && check_VertexCover(g, i, isVisited) == 0) {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 
@@ -635,13 +643,14 @@ void checkVertexCover(int temp, struct Graph* g) {
     get_fileName((temp + 3), fileName);
     get_VertexCover(g, fileName);
     int* isVisited = initFunction(g->numVertices);
-    int bl = check_VertexCover(g, isVisited);
+    int bl = VertexCover_solution(g, isVisited);
 
+    system("cls");
     printf("===== Project I - Vo Hoai Nam 20204592 ======\n");
     printf("|| Ban da chon kiem tra tap dinh bao phu!  ||\n");
     printf("||                                         ||\n");
     if(bl) {
-        printf("||     Tap dinh bao phu cua do thi         ||\n");
+        printf("||     Tap dinh bao phu     do thi         ||\n");
     }else {
         printf("||     Tap dinh khong bao phu do thi       ||\n");
     }
